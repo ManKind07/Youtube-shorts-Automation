@@ -42,7 +42,7 @@ FFmpeg
 
 Getting Started
 
-To get a local copy up and running, follow these steps.
+To get a local copy up and running, follow these simple steps.
 
 Prerequisites
 
@@ -52,15 +52,14 @@ FFmpeg: You must have FFmpeg installed on your system and available in your syst
 
 PyTorch: Whisper requires a working PyTorch installation.
 
-pip install torch torchvision torchaudio
+$$pip install torch torchvision torchaudio$$
 
 
 Installation
 
 Clone the repository:
 
-git clone [https://github.com/your_username/your_project_name.git](https://github.com/your_username/your_project_name.git)
-
+$$git clone [https://github.com/your_username/your_project_name.git](https://github.com/your_username/your_project_name.git)$$
 
 Navigate to the project directory:
 
