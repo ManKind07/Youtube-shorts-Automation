@@ -1,3 +1,7 @@
+##Final Polishing
+#Adds Title card in the begining section
+#Adds BGM
+
 import subprocess
 
 # Function to get video duration in seconds
@@ -38,4 +42,5 @@ commands2 = [
 for cmd in commands2:
     print(f"Running: {cmd}")
     subprocess.run(cmd, shell=True, check=True)
+
     print("Done! #2")
