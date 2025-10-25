@@ -1,94 +1,61 @@
-Automated Video Subtitle & Caption Pipeline
+# 🤖 YouTube Shorts Automation Pipeline
 
-A powerful, three-stage Python pipeline that leverages OpenAI's Whisper to generate highly accurate, timestamped transcriptions and then uses FFmpeg to burn them as stylized, permanent captions onto any video.
+This project provides a set of Python scripts to automate the creation of engaging, captioned YouTube Shorts. The pipeline takes a raw audio file and a background video, transcribes the audio using AI, generates word-by-word "karaoke-style" subtitles, and combines everything into a final, polished video file with a title card.
 
-This project automates the entire workflow of creating professional-looking, hardcoded subtitles, saving countless hours of manual transcription and video editing.
+The process is broken into three main stages: AI transcription, subtitle generation, and FFmpeg video assembly.
 
-How It Works: The Three-Stage Pipeline
+---
 
-The automation is handled by three core scripts that work in sequence:
+## 🚀 Features
 
-1. Transcription.py - AI-Powered Transcription
+- **AI-Powered Transcription:** Uses `faster_whisper` (a fast implementation of OpenAI's Whisper) for accurate, word-level transcription.  
+- **Word-by-Word Timestamps:** Generates precise start and end times for every single word in the audio.  
+- **Karaoke-Style Subtitles:** Automatically converts timestamps into an `.ass` subtitle file with karaoke fade effects.  
+- **FFmpeg Automation:** A powerful pipeline script (`pipeline.py`) chains multiple FFmpeg commands to:
+  - Burn subtitles onto the video.
+  - Add the original audio.
+  - Overlay a fading title card.
+  - Trim the video to its final length.  
+- **Lightweight:** Designed to run efficiently (the transcription model is `tiny.en`).
 
-Input: An audio or video file.
+---
 
-Process: Feeds the audio into OpenAI's Whisper model to perform speech-to-text transcription. It captures not just words, but also precise start/end timestamps, pauses, and punctuation for each segment.
+## ⚙️ How It Works — The 3-Script Pipeline
 
-Output: A structured JSON file containing the full, timestamped transcript.
+This project is a **manual, step-by-step pipeline**. You must run the scripts in order.
 
-2. FFmpeg_facilitator.py - Subtitle Styling & Formatting
+### 1️⃣ `Transcription.py` — Audio to Timestamps
 
-Input: The JSON transcript from the previous stage.
+- **Input:** An audio file (e.g., `real_audio.mp3`). Edit the `audio_file` variable in the script.  
+- **Process:** Loads the `faster_whisper` model and transcribes the entire audio file, generating word-level timestamps.  
+- **Output:** `word_timestamps_oneperline.json` containing a list of all words with start/end times.
 
-Process: Parses the JSON data and converts it into an Advanced SubStation Alpha (.ass) subtitle file. This script is where you can programmatically define the visual characteristics of your captions.
+---
 
-Output: A .ass file containing the text and styling rules (font, size, color, position, etc.) for the subtitles.
+### 2️⃣ `FFmpeg_Facilitator.py` — Timestamps to Subtitles
 
-3. pipeline.py - Video & Caption Integration
+- **Input:** JSON data from `word_timestamps_oneperline.json`.  
+- **Process (Manual Step):**  
+  1. Copy the JSON list from `word_timestamps_oneperline.json`.  
+  2. Paste it into `FFmpeg_Facilitator.py`, replacing the `timestamps = [...]` example list.  
+- **Output:** `words_karaoke.ass` — a formatted Advanced SubStation Alpha subtitle file with karaoke-style effects.
 
-Input: The original source video and the generated .ass file.
+---
 
-Process: This script acts as the final assembler. It uses a templated FFmpeg command to overlay and "burn" the stylized subtitles from the .ass file directly onto the source video frames.
+### 3️⃣ `pipeline.py` — Video Assembly
 
-Output: A final .mp4 video with permanent, professional-grade captions.
+- **Input:** Ensure the following files are in the same directory:
+  - `words_karaoke.ass` (from Step 2)
+  - `real_audio.mp3` (original audio)
+  - `output.mp4` (background video)
+  - `title.png` (title card image)
 
-Built With
+- **Process:** Runs a series of FFmpeg commands:
+  - Burns the subtitles onto `output.mp4` and adds `real_audio.mp3`.
+  - Delays the audio by 2 seconds for the title.
+  - Overlays `title.png` on a blurred background, fading between 2–4 seconds.
+  - Trims the first 2 seconds to create the final short.
 
-Python
+- **Output:** `output_trimmed.mp4` — the final polished video.
 
-OpenAI Whisper
-
-FFmpeg
-
-Getting Started
-
-To get a local copy up and running, follow these simple steps.
-
-Prerequisites
-
-Python 3.8+
-
-FFmpeg: You must have FFmpeg installed on your system and available in your system's PATH.
-
-PyTorch: Whisper requires a working PyTorch installation.
-
-$$pip install torch torchvision torchaudio$$
-
-
-Installation
-
-Clone the repository:
-
-$$git clone [https://github.com/your_username/your_project_name.git](https://github.com/your_username/your_project_name.git)$$
-
-Navigate to the project directory:
-
-cd your_project_name
-
-
-Install the required Python packages:
-
-pip install -r requirements.txt
-# The requirements.txt file should include openai-whisper
-
-
-Usage
-
-To process a video, run the main pipeline script and specify the path to your source video file.
-
-python pipeline.py --video_path "path/to/your/video.mp4"
-
-
-The script will execute the full pipeline, and you will find the final captioned video in the output/ directory.
-
-Features
-
-High-Accuracy Transcription: Leverages the state-of-the-art Whisper model for precise speech-to-text, including punctuation.
-
-Word-Level Timestamps: Generates captions that are perfectly synchronized with the audio.
-
-Customizable Caption Styles: Easily modify FFmpeg_facilitator.py to change the font, size, color, and position of your subtitles.
-
-Fully Automated: End-to-end pipeline requires zero manual editing.
-
-Robust & Reliable: Uses the industry-standard FFmpeg for high-quality video processing.
+---
